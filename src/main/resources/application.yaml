@@ -1,0 +1,31 @@
+server:
+  port: 8787
+
+spring:
+  application:
+    name: mongodb
+  data:
+    cassandra:
+      local-datacenter: datacenter1
+      keyspace-name: spring_cassandra
+    mongodb:
+      auto-index-creation: true
+#      authentication-database: admin
+#      host: localhost
+#      port: 27017
+      database: task
+#      password: mongo
+#      username: mongo
+      uri: mongodb+srv://mongo:mongomongo@cluster0.8dg2gtg.mongodb.net/?retryWrites=true&w=majority
+#      mongodb+srv://mongo:mongo@cluster0.8dg2gtg.mongodb.net/?retryWrites=true&w=majority
+
+astra:
+ # client-id: <CLIENT_ID>
+  #client-secret: <CLIENT_SECRET>
+  #astra.application-token: <APP_TOKEN>
+  #cloud-region: <DB_REGION>
+  #database-id: <DB_ID>
+  keyspace: spring_cassandra
+
+
+
