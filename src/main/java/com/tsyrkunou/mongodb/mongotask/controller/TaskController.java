@@ -21,6 +21,7 @@ import com.tsyrkunou.mongodb.mongotask.model.Task;
 import com.tsyrkunou.mongodb.mongotask.model.dto.CreateSubTaskRequest;
 import com.tsyrkunou.mongodb.mongotask.model.dto.CreateTaskRequest;
 import com.tsyrkunou.mongodb.mongotask.model.dto.OverdueParam;
+import com.tsyrkunou.mongodb.mongotask.model.dto.UpdateSubTaskRequest;
 import com.tsyrkunou.mongodb.mongotask.model.dto.UpdateTaskRequest;
 import com.tsyrkunou.mongodb.mongotask.repository.LogCassandraRepo;
 import com.tsyrkunou.mongodb.mongotask.repository.SubTaskRepository;
@@ -117,6 +118,26 @@ public class TaskController {
     public List<SubTask> getSubTask(@RequestParam String id) {
         Task task = taskRepository.findById(id).orElseThrow();
         return task.getSubTasks();
+    }
+
+    @PutMapping("/updatesub/{taskId}")
+    public SubTask updateSubTask(@PathVariable String taskId, @RequestBody UpdateSubTaskRequest updateTaskRequest) {
+        SubTask taskForUpdate = subTaskRepository.findById(taskId).orElseThrow();
+        SubTask task = applicationConverter.convert(updateTaskRequest, taskForUpdate);
+        logCassandraRepo.save(CassandraLogEntity.builder().logInfo(task.getDescription()).build());
+        return subTaskRepository.save(task);
+    }
+
+    @DeleteMapping("/deletesub/{taskId}")
+    public void deleteSubTask(@PathVariable String taskId) {
+        subTaskRepository.deleteById(taskId);
+    }
+
+    @GetMapping("/getBytextinname")
+    public List<SubTask> getByNameText(@RequestParam String text) {
+        TextCriteria criteria = TextCriteria.forDefaultLanguage()
+                .matchingAny(text);
+        return subTaskRepository.findAllBy(criteria);
     }
 
 }
